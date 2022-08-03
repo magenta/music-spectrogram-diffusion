@@ -1,0 +1,16 @@
+# Configuration for ISMIR 2021 piano-only model.
+
+include 'music_spectrogram_diffusion/gin/tasks/base.gin'
+
+tasks.NoteRepresentationConfig:
+  onsets_only = False
+  include_ties = False
+
+TASK_PREFIX = 'synthesis'
+DATASET_NAME = 'maestrov3'
+TASK_FEATURE_LENGTHS = {'inputs': 2048, 'targets': 512}
+TRAIN_STEPS = 400000
+NUM_VELOCITY_BINS = 127
+PROGRAM_GRANULARITY = 'flat'
+ONSETS_ONLY = False
+USE_TIES = False

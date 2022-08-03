@@ -1,0 +1,10 @@
+# Configuration for MT3 multi-task multitrack model.
+
+include 'music_spectrogram_diffusion/gin/tasks/base.gin'
+
+TASK_FEATURE_LENGTHS = {'inputs': 2048, 'targets': 256}
+TRAIN_STEPS = 500000
+NUM_VELOCITY_BINS = 1
+PROGRAM_GRANULARITY = 'full'
+ONSETS_ONLY = False
+USE_TIES = True

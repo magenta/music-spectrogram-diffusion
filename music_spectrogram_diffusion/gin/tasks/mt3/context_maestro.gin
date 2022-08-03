@@ -1,0 +1,8 @@
+# Configuration for MT3 multi-task multitrack model.
+
+include 'music_spectrogram_diffusion/gin/tasks/mt3/base.gin'
+
+TASK_FEATURE_LENGTHS = {'inputs': 2048, 'targets': 256, 'targets_context': 256}
+
+TASK_PREFIX = 'synthesis_with_context'
+DATASET_NAME = 'maestrov3'

@@ -1,0 +1,11 @@
+# T5.1.1 Small model.
+include 'music_spectrogram_diffusion/gin/models/autoregressive/deterministic/t5_base.gin'
+
+
+network.T5Config:
+  emb_dim = 512
+  num_heads = 6
+  num_encoder_layers = 8
+  num_decoder_layers = 8
+  head_dim = 64
+  mlp_dim = 1024

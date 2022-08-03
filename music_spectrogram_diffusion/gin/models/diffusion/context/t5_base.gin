@@ -1,0 +1,83 @@
+# T5.1.1 Small model.
+from __gin__ import dynamic_registration
+from music_spectrogram_diffusion.models.diffusion import diffusion_utils
+from music_spectrogram_diffusion.models.diffusion import models
+from music_spectrogram_diffusion.models.diffusion import network
+from music_spectrogram_diffusion import vocabularies
+import seqio
+from t5x import adafactor
+
+# ------------------- Vocabulary -----------------------------------------------
+# Number of velocity bins: set to 1 (no velocity) or 127
+VOCAB_CONFIG = @vocabularies.VocabularyConfig()
+vocabularies.VocabularyConfig.num_velocity_bins = %NUM_VELOCITY_BINS
+
+INPUT_VOCABULARY = @vocabularies.vocabulary_from_codec()
+vocabularies.num_embeddings.vocabulary = %INPUT_VOCABULARY
+
+vocabularies.vocabulary_from_codec.codec = @vocabularies.build_codec()
+vocabularies.build_codec.vocab_config = %VOCAB_CONFIG
+
+
+# ------------------- Loss HParam ----------------------------------------------
+Z_LOSS = 0.0001
+LABEL_SMOOTHING = 0.0
+LOSS_NORMALIZING_FACTOR = None
+models.DiffusionModel.loss_fn:
+  z_loss = %Z_LOSS
+  label_smoothing = %LABEL_SMOOTHING
+  loss_normalizing_factor = %LOSS_NORMALIZING_FACTOR
+
+
+# ------------------- Optimizer ------------------------------------------------
+# `learning_rate` is set by `Trainer.learning_rate_fn`.
+OPTIMIZER = @adafactor.Adafactor()
+adafactor.Adafactor:
+  decay_rate = 0.8
+  step_offset = 0
+  logical_factor_rules = @adafactor.standard_logical_factor_rules()
+
+
+# ------------------- Model ----------------------------------------------------
+MODEL = @models.ContextDiffusionModel()
+models.ContextDiffusionModel:
+  module = @network.ContinuousContextTransformer()
+  input_vocabulary = %INPUT_VOCABULARY
+  output_vocabulary = @seqio.vocabularies.PassThroughVocabulary()
+  optimizer_def = %OPTIMIZER
+  diffusion_config = @diffusion_utils.DiffusionConfig()
+  audio_codec = %AUDIO_CODEC
+seqio.vocabularies.PassThroughVocabulary.size = 0
+
+
+diffusion_utils.DiffusionConfig:
+  classifier_free_guidance = @diffusion_utils.ClassifierFreeGuidanceConfig()
+  train_schedule = @train/diffusion_utils.DiffusionSchedule()
+  sampler = @diffusion_utils.SamplerConfig()
+
+diffusion_utils.SamplerConfig:
+  schedule = @sampler/diffusion_utils.DiffusionSchedule()
+
+train/diffusion_utils.DiffusionSchedule:
+  name = 'cosine'
+
+sampler/diffusion_utils.DiffusionSchedule:
+  name = 'cosine'
+  num_steps = 1000
+
+# ------------------- Network specification ------------------------------------
+network.ContinuousContextTransformer.config = @network.T5Config()
+network.T5Config:
+  vocab_size = @vocabularies.num_embeddings()
+  dtype = 'float32'
+  emb_dim = 768
+  num_heads = 12
+  num_encoder_layers = 12
+  num_decoder_layers = 12
+  head_dim = 64
+  mlp_dim = 2048
+  mlp_activations = ('gelu', 'linear')
+  dropout_rate = 0.1
+  decoder_cross_attend_style = 'concat_encodings'
+  position_encoding = 'fixed_permuted_offset'
+  context_positions = 'terminal_relative'

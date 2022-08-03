@@ -1,0 +1,6 @@
+# Configuration for MT3 multi-task multitrack model.
+
+include 'music_spectrogram_diffusion/gin/tasks/mt3/base.gin'
+
+TASK_PREFIX = 'synthesis'
+DATASET_NAME = 'cerberus4'

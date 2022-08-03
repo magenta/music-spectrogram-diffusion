@@ -1,0 +1,5 @@
+# AUDIO_CODEC used by both tasks/ and models/.
+from __gin__ import dynamic_registration
+from music_spectrogram_diffusion import audio_codecs
+
+AUDIO_CODEC = @audio_codecs.MelGAN()

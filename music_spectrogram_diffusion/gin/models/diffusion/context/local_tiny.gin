@@ -1,0 +1,59 @@
+# A gin file to make the Transformer models tiny for faster local testing.
+#
+# When testing locally with CPU, there are a few things that we need.
+# - tiny model size
+# - small enough batch size
+# - small sequence length
+# - determinstic dataset pipeline
+#
+# This gin file adds such configs on top of the 'small' configuration.
+
+include 'music_spectrogram_diffusion/gin/models/diffusion/context/t5_small.gin'
+
+from __gin__ import dynamic_registration
+import __main__ as train_script
+from music_spectrogram_diffusion.models.diffusion import network
+from t5x import partitioning
+from t5x import trainer
+from t5x import utils
+
+train_script.train.random_seed = 42  # dropout seed
+train/utils.DatasetConfig.seed = 42  # dataset seed
+
+TASK_FEATURE_LENGTHS = {"inputs": 64, "targets": 4, "targets_context": 4}
+LABEL_SMOOTHING = 0.0
+
+# Network specification overrides
+network.T5Config:
+  dtype = 'float32'
+  emb_dim = 8
+  num_heads = 4
+  num_encoder_layers = 2
+  num_decoder_layers = 2
+  head_dim = 3
+  mlp_dim = 16
+  mlp_activations = ('gelu', 'linear')
+  dropout_rate = 0.0
+  token_encoder_num_latents = 16
+  continuous_encoder_num_latents = 2
+  decoder_num_latents = 2
+
+TRAIN_STEPS = 3
+
+train/utils.DatasetConfig:
+  batch_size = 2
+  shuffle = False
+
+train_eval/utils.DatasetConfig.batch_size = 2
+
+train_script.train:
+  eval_period = 2
+  eval_steps = 2
+
+trainer.Trainer.num_microbatches = 0
+partitioning.PjitPartitioner:
+  num_partitions = 1
+  model_parallel_submesh = None
+
+utils.CheckpointConfig:
+  restore = None

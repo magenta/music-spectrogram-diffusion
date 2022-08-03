@@ -1,0 +1,51 @@
+# Defaults for specifying tasks.
+from __gin__ import dynamic_registration
+from music_spectrogram_diffusion import preprocessors
+from music_spectrogram_diffusion import tasks
+
+
+# Required to be set:
+TASK_PREFIX = %gin.REQUIRED
+DATASET_NAME = %gin.REQUIRED
+NUM_VELOCITY_BINS = %gin.REQUIRED
+PROGRAM_GRANULARITY = %gin.REQUIRED
+
+tasks.NoteRepresentationConfig:
+  onsets_only = False
+  include_ties = True
+
+# %AUDIO_CODEC is specified in audio_codecs/
+
+# Program granularity: set to 'flat', 'midi_class', or 'full'
+preprocessors.map_midi_programs.granularity_type = %PROGRAM_GRANULARITY
+
+# Task names.
+TRAIN_TASK_NAME = @train/tasks.construct_task_name()
+TRAIN_EVAL_TASK_NAME = %TRAIN_TASK_NAME
+INFER_EVAL_TASK_NAME = @infer_eval/tasks.construct_task_name()
+INFER_TASK_NAME = @infer/tasks.construct_task_name()
+TEST_TASK_NAME = %INFER_TASK_NAME
+
+train/tasks.construct_task_name:
+  task_prefix = %TASK_PREFIX
+  dataset_name = %DATASET_NAME
+  audio_codec = %AUDIO_CODEC
+  vocab_config = %VOCAB_CONFIG
+  note_representation_config = @tasks.NoteRepresentationConfig()
+  task_suffix = 'train'
+
+infer_eval/tasks.construct_task_name:
+  task_prefix = %TASK_PREFIX
+  dataset_name = %DATASET_NAME
+  audio_codec = %AUDIO_CODEC
+  vocab_config = %VOCAB_CONFIG
+  note_representation_config = @tasks.NoteRepresentationConfig()
+  task_suffix = 'eval'
+
+infer/tasks.construct_task_name:
+  task_prefix = %TASK_PREFIX
+  dataset_name = %DATASET_NAME
+  audio_codec = %AUDIO_CODEC
+  vocab_config = %VOCAB_CONFIG
+  note_representation_config = @tasks.NoteRepresentationConfig()
+  task_suffix = 'test'

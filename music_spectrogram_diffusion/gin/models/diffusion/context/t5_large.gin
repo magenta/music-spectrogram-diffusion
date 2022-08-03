@@ -1,0 +1,11 @@
+# T5.1.1 Large model.
+include 'music_spectrogram_diffusion/gin/models/diffusion/context/t5_base.gin'
+
+
+network.T5Config:
+  emb_dim = 1024
+  num_heads = 16
+  num_encoder_layers = 24
+  num_decoder_layers = 24
+  head_dim = 64
+  mlp_dim = 2816

@@ -1,0 +1,18 @@
+# Continue an existing training run.
+#
+# Required to be set:
+# - INITIAL_CHECKPOINT_PATH
+
+from __gin__ import dynamic_registration
+
+from t5x import utils
+
+include 'music_spectrogram_diffusion/gin/train.gin'
+
+INITIAL_CHECKPOINT_PATH = %gin.REQUIRED
+
+utils.CheckpointConfig.restore = @utils.RestoreCheckpointConfig()
+
+utils.RestoreCheckpointConfig:
+  mode = 'specific'
+  path = %INITIAL_CHECKPOINT_PATH
