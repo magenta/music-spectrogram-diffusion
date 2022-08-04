@@ -60,7 +60,6 @@ train_script.train:
   eval_steps = %EVAL_STEPS
   eval_period = 10000
   random_seed = None  # use faster, hardware RNG. (set to int to bypass)
-  xprof_seconds = 5  # GOOGLE-INTERNAL
   summarize_config_fn = @gin_utils.summarize_gin_config
   inference_evaluator_cls = @seqio.Evaluator
 
