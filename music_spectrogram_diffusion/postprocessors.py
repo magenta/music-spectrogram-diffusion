@@ -78,7 +78,7 @@ class TFHubEmbeddingsModel(object):
             self._model_output_to_embeddings_fn(model_output).items()}
 
 
-@functools.cache
+@functools.lru_cache()
 def _get_vggish_model():
   return TFHubEmbeddingsModel(
       path='https://tfhub.dev/google/vggish/1',
@@ -87,7 +87,7 @@ def _get_vggish_model():
       model_output_to_embeddings_fn=lambda x: {'vggish_embedding': x})
 
 
-@functools.cache
+@functools.lru_cache()
 def _get_trill_model():
   return TFHubEmbeddingsModel(
       path='https://tfhub.dev/google/nonsemantic-speech-benchmark/trill/3',

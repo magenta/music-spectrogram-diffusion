@@ -79,12 +79,12 @@ FULL_RAW_AUDIO_PER_TASK = 3
 # cached model seems to avoid this problem.
 
 
-@functools.cache
+@functools.lru_cache()
 def get_synth_model(checkpoint_dir: str, gin_config: str):
   return inference.InferenceModel(checkpoint_dir, gin_config)
 
 
-@functools.cache
+@functools.lru_cache()
 def get_transcription_model(checkpoint_dir: str):
   return transcription_inference.TranscriptionInferenceModel(checkpoint_dir)
 

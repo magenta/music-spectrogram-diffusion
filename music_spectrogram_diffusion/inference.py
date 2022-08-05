@@ -156,7 +156,7 @@ class InferenceModel(object):
 
     return types
 
-  @functools.cache
+  @functools.lru_cache()
   def _restore_from_checkpoint(self):
     """Restore training state from checkpoint, resets self._predict_fn()."""
     logging.info('Restoring checkpoint %s', self.checkpoint_path)
@@ -180,7 +180,7 @@ class InferenceModel(object):
     _, train_state = self._restore_from_checkpoint()
     return train_state.step
 
-  @functools.cache
+  @functools.lru_cache()
   def _get_predict_fn_and_params(self):
     """Generate a partitioned prediction function for decoding."""
     train_state_axes, train_state = self._restore_from_checkpoint()
