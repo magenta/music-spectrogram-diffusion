@@ -23,6 +23,5 @@ from music_spectrogram_diffusion import metrics
 from music_spectrogram_diffusion import note_sequences
 from music_spectrogram_diffusion import preprocessors
 from music_spectrogram_diffusion import run_length_encoding
-from music_spectrogram_diffusion import summaries
 from music_spectrogram_diffusion import tasks
 from music_spectrogram_diffusion import vocabularies
