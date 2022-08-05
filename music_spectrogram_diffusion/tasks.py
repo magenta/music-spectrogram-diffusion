@@ -504,8 +504,6 @@ SYNTH_MIXTURE_DATASET_CONFIGS = [
 
 AUDIO_CODECS = [
     audio_codecs.MelGAN(),
-    audio_codecs.SoundStream(),
-    audio_codecs.MelWaveform(),
 ]
 
 # -------------------------- Synthesis Task ------------------------------------
