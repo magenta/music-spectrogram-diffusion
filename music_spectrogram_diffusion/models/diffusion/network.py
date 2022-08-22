@@ -103,7 +103,7 @@ def position_encoding_layer(config: T5Config, max_length: int):
         features=config.emb_dim,
         dtype=config.dtype)
   else:
-    raise ValueError(f'Unknown {config.position_encoding=}')
+    raise ValueError(f'Unknown position_encoding: {config.position_encoding}')
 
 
 class EncoderLayer(nn.Module):
@@ -333,7 +333,7 @@ class ContinuousEncoder(nn.Module):
       input_positions = jax.vmap(make_sequence_terminal_relative)(
           input_positions, seq_lens)
     else:
-      raise ValueError(f'Unknown {cfg.context_positions=}')
+      raise ValueError(f'Unknown context_positions: {cfg.context_positions}')
 
     x += position_encoding_layer(config=cfg, max_length=max_positions)(
         input_positions)
