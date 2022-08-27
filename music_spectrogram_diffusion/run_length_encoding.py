@@ -167,10 +167,12 @@ def encode_and_index_events(
 
 
 @seqio.map_over_dataset
+@tf.function
 def extract_sequence_with_indices(features,
                                   state_events_end_token=None,
                                   feature_key='targets'):
   """Extract target sequence corresponding to audio token segment."""
+  features = features.copy()
   start_idx = features['event_start_indices'][0]
   end_idx = features['event_end_indices'][-1]
 

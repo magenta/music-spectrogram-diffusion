@@ -19,6 +19,7 @@ from typing import Optional
 import jax.numpy as jnp
 import numpy as np
 import tensorflow as tf
+import tensorflow_hub as hub
 
 
 # Hack for caching SavedModels in the module to avoid reloading.
@@ -27,16 +28,15 @@ _MODEL_CACHE = {
 }
 
 
-# TODO(fjord): Pull from TF Hub.
 _MODEL_PATHS = {
-    'melgan': '',
+    'melgan': 'https://tfhub.dev/google/soundstream/mel/decoder/music/1',
 }
 
 
 def _load_model_from_cache(key):
   """Loads a model from the cache, optionally adds model to cache."""
   if _MODEL_CACHE[key] is None:
-    _MODEL_CACHE[key] = tf.saved_model.load(_MODEL_PATHS[key])
+    _MODEL_CACHE[key] = hub.load(_MODEL_PATHS[key])
   return _MODEL_CACHE[key]
 
 
