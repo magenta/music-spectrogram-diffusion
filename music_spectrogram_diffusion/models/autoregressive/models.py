@@ -26,7 +26,7 @@ from music_spectrogram_diffusion import metrics
 from t5x import models
 
 MetricsMap = metrics.MetricsMap
-PyTreeDef = models.PyTreeDef
+PyTree = Any
 
 
 def continuous_decode(
@@ -86,7 +86,7 @@ class ContinuousOutputsEncoderDecoderModel(models.EncoderDecoderModel):
 
   def loss_fn(
       self,
-      params: models.PyTreeDef,
+      params: models.PyTree,
       batch: Mapping[str, jnp.ndarray],
       dropout_rng: Optional[jnp.ndarray],
       label_smoothing: float = 0.0,

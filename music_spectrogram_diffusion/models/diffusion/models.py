@@ -28,7 +28,7 @@ from music_spectrogram_diffusion.models.diffusion import diffusion_utils
 from music_spectrogram_diffusion.models.diffusion import feature_converters as diffusion_feature_converters
 from t5x import models
 
-PyTreeDef = models.PyTreeDef
+PyTree = Any
 
 
 class DiffusionModel(
@@ -48,7 +48,7 @@ class DiffusionModel(
 
   def _compute_logits(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       dropout_rng: Optional[jax.random.KeyArray] = None) -> jnp.ndarray:
     raise NotImplementedError("Not used for the diffusion model.")
@@ -76,7 +76,7 @@ class DiffusionModel(
 
   def loss_fn(
       self,
-      params: models.PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       dropout_rng: Optional[jnp.ndarray],
       label_smoothing: float = 0.0,
@@ -139,7 +139,7 @@ class DiffusionModel(
 
   def score_batch(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       return_intermediates: bool = False,
   ) -> Union[jnp.ndarray, Tuple[jnp.ndarray, Mapping[str, Any]]]:
@@ -148,7 +148,7 @@ class DiffusionModel(
 
   def predict_batch_with_aux(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       rng: Optional[jax.random.KeyArray] = jax.random.PRNGKey(0),
   ) -> Tuple[jnp.ndarray, Mapping[str, jnp.ndarray]]:
@@ -222,7 +222,7 @@ class ContextDiffusionModel(
 
   def _compute_logits(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       dropout_rng: Optional[jax.random.KeyArray] = None) -> jnp.ndarray:
     raise NotImplementedError("Not used for the diffusion model.")
@@ -255,7 +255,7 @@ class ContextDiffusionModel(
 
   def loss_fn(
       self,
-      params: models.PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       dropout_rng: Optional[jnp.ndarray],
       label_smoothing: float = 0.0,
@@ -330,7 +330,7 @@ class ContextDiffusionModel(
 
   def score_batch(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       return_intermediates: bool = False,
   ) -> Union[jnp.ndarray, Tuple[jnp.ndarray, Mapping[str, Any]]]:
@@ -339,7 +339,7 @@ class ContextDiffusionModel(
 
   def predict_batch_with_aux(
       self,
-      params: PyTreeDef,
+      params: PyTree,
       batch: Mapping[str, jnp.ndarray],
       rng: Optional[jax.random.KeyArray] = jax.random.PRNGKey(0),
   ) -> Tuple[jnp.ndarray, Mapping[str, jnp.ndarray]]:
