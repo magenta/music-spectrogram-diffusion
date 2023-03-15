@@ -42,7 +42,7 @@ PRNGKey = jnp.ndarray
 Shape = Iterable[int]
 Activation = Callable[..., Array]
 # Parameter initializers.
-Initializer = Callable[[PRNGKey, Shape, DType], Array]
+Initializer = Callable[[Optional[PRNGKey], Shape, DType], Array]
 
 default_embed_init = nn.initializers.variance_scaling(
     1.0, 'fan_in', 'normal', out_axis=0)
@@ -68,7 +68,7 @@ def sinusoidal(min_scale: float = 1.0,
     The sinusoidal initialization function.
   """
 
-  def init(key: PRNGKey, shape: Shape, dtype: DType = dtype) -> Array:
+  def init(key: Optional[PRNGKey], shape: Shape, dtype: DType = dtype) -> Array:
     """Sinusoidal init."""
     if dtype != np.float32:
       raise ValueError('The sinusoidal initializer only supports float32.')
@@ -391,9 +391,9 @@ def _canonicalize_tuple(x):
     return (x,)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # DenseGeneral for attention layers.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class DenseGeneral(nn.Module):
   """A linear transformation (without bias) with flexible axes.
 
@@ -626,9 +626,9 @@ class FixedEmbed(nn.Module):
     return jnp.take(self.embedding, inputs, axis=0)
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # T5 Layernorm - no subtraction of mean or bias.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 class LayerNorm(nn.Module):
   """T5 Layer normalization operating on the last axis of the input data."""
   epsilon: float = 1e-6
@@ -666,9 +666,9 @@ class FiLMLayer(nn.Module):
     return x
 
 
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # Mask-making utility functions.
-#------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 def make_attention_mask(query_input: Array,
                         key_input: Array,
                         pairwise_fn: Callable = jnp.multiply,
@@ -735,7 +735,9 @@ def make_causal_mask(x: Array,
       dtype=dtype)
 
 
-def combine_masks(*masks: Optional[Array], dtype: DType = jnp.float32):
+def combine_masks(
+    *masks: Optional[Array], dtype: DType = jnp.float32
+) -> Optional[Array]:
   """Combine attention masks.
 
   Args:
@@ -872,7 +874,9 @@ def make_decoder_mask(decoder_target_tokens: Array,
         make_attention_mask(
             decoder_segment_ids, decoder_segment_ids, jnp.equal, dtype=dtype))
 
-  return combine_masks(*masks, dtype=dtype)
+  decoder_mask = combine_masks(*masks, dtype=dtype)
+  assert decoder_mask is not None
+  return decoder_mask
 
 
 def zero_activations_if_masked(y: jnp.ndarray,
