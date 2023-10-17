@@ -1,4 +1,4 @@
-# Copyright 2022 The Music Spectrogram Diffusion Authors.
+# Copyright 2023 The Music Spectrogram Diffusion Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -50,12 +50,12 @@ class DiffusionModel(
       self,
       params: PyTree,
       batch: Mapping[str, jnp.ndarray],
-      dropout_rng: Optional[jax.random.KeyArray] = None) -> jnp.ndarray:
+      dropout_rng: Optional[jax.Array] = None) -> jnp.ndarray:
     raise NotImplementedError("Not used for the diffusion model.")
 
   def get_initial_variables(
       self,
-      rng: jax.random.KeyArray,
+      rng: jax.Array,
       input_shapes: Mapping[str, models.Array],
       input_types: Optional[Mapping[str, jnp.dtype]] = None
   ) -> flax_scope.FrozenVariableDict:
@@ -150,7 +150,7 @@ class DiffusionModel(
       self,
       params: PyTree,
       batch: Mapping[str, jnp.ndarray],
-      rng: Optional[jax.random.KeyArray] = jax.random.PRNGKey(0),
+      rng: Optional[jax.Array] = jax.random.PRNGKey(0),
   ) -> Tuple[jnp.ndarray, Mapping[str, jnp.ndarray]]:
     """Predict by doing a loop over the forward diffusion process.
 
@@ -224,12 +224,12 @@ class ContextDiffusionModel(
       self,
       params: PyTree,
       batch: Mapping[str, jnp.ndarray],
-      dropout_rng: Optional[jax.random.KeyArray] = None) -> jnp.ndarray:
+      dropout_rng: Optional[jax.Array] = None) -> jnp.ndarray:
     raise NotImplementedError("Not used for the diffusion model.")
 
   def get_initial_variables(
       self,
-      rng: jax.random.KeyArray,
+      rng: jax.Array,
       input_shapes: Mapping[str, models.Array],
       input_types: Optional[Mapping[str, jnp.dtype]] = None
   ) -> flax_scope.FrozenVariableDict:
@@ -341,7 +341,7 @@ class ContextDiffusionModel(
       self,
       params: PyTree,
       batch: Mapping[str, jnp.ndarray],
-      rng: Optional[jax.random.KeyArray] = jax.random.PRNGKey(0),
+      rng: Optional[jax.Array] = jax.random.PRNGKey(0),
   ) -> Tuple[jnp.ndarray, Mapping[str, jnp.ndarray]]:
     """Predict by doing a loop over the forward diffusion process.
 
