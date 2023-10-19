@@ -1,4 +1,4 @@
-# Copyright 2022 The Music Spectrogram Diffusion Authors.
+# Copyright 2023 The Music Spectrogram Diffusion Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ def predict_x0_from_v(*,
 
 
 def get_diffusion_training_input(
-    rng: jax.random.KeyArray,
+    rng: jax.Array,
     x0: jnp.ndarray,
     diffusion_config: DiffusionConfig
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
@@ -396,7 +396,7 @@ def ddpm_step(i: jnp.ndarray, rng: jnp.ndarray, logsnr_s: jnp.ndarray,
 
 
 def eval_step(
-    rng: jax.random.KeyArray,
+    rng: jax.Array,
     diffusion_config: DiffusionConfig,
     batch_size: int,
     pred_fn: Callable[..., jnp.ndarray]
@@ -453,7 +453,7 @@ def eval_step(
   return body
 
 
-def eval_scan(rng: jax.random.KeyArray,
+def eval_scan(rng: jax.Array,
               target_shape: Tuple[int],
               pred_fn: Callable[..., jnp.ndarray],
               diffusion_config: DiffusionConfig) -> jnp.ndarray:
