@@ -1,4 +1,4 @@
-# Copyright 2023 The Music Spectrogram Diffusion Authors.
+# Copyright 2024 The Music Spectrogram Diffusion Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -178,7 +178,7 @@ class DiffusionModel(
     def pred_fn(z: jnp.ndarray,
                 time: jnp.ndarray,
                 include_conditioning: bool) -> jnp.ndarray:
-      step_encodings_and_masks = jax.tree_map(
+      step_encodings_and_masks = jax.tree.map(
           lambda x: x * include_conditioning, encodings_and_masks)
       return self.module.apply(
           {
@@ -373,7 +373,7 @@ class ContextDiffusionModel(
     def pred_fn(z: jnp.ndarray,
                 time: jnp.ndarray,
                 include_conditioning: bool) -> jnp.ndarray:
-      step_encodings_and_masks = jax.tree_map(
+      step_encodings_and_masks = jax.tree.map(
           lambda x: x * include_conditioning, encodings_and_masks)
       return self.module.apply(
           {

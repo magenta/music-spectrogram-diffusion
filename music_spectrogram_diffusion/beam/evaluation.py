@@ -1,4 +1,4 @@
-# Copyright 2023 The Music Spectrogram Diffusion Authors.
+# Copyright 2024 The Music Spectrogram Diffusion Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -206,7 +206,7 @@ class InferSong(beam.DoFn):
 
       tick = time.time()
       if self._prediction_source == 'model':
-        pred_encoded, _ = jax.tree_map(
+        pred_encoded, _ = jax.tree.map(
             np.asarray, self._synth_model.predict(batch))
       elif self._prediction_source in ('gt_raw', 'gt_encoded'):
         pred_encoded = batch['decoder_target_tokens']
