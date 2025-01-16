@@ -195,7 +195,7 @@ def get_logsnr_t(t: jnp.ndarray, schedule: DiffusionSchedule) -> jnp.ndarray:
     alphas_cumprod = np.cumprod(1. - betas, axis=0)
     logsnr = np.log(alphas_cumprod) - np.log1p(-alphas_cumprod)
     # Clip the values between [-logsnr_min, logsnr_max]
-    logsnr = np.clip(logsnr, a_min=logsnr_min, a_max=logsnr_max)
+    logsnr = np.clip(logsnr, min=logsnr_min, max=logsnr_max)
     return jnp.interp(t, np.linspace(0, 1, schedule.num_steps), logsnr)
 
   else:
